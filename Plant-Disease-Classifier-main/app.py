@@ -416,8 +416,7 @@ def main():
         # Display available classes in an expander
         with st.expander("Available Plant Diseases for Classification"):
             # Format class names for display
-            formatted_classes = [name.replace("_", " ").replace(
-                "__", " ").replace("___", " ").title() for name in class_names]
+            formatted_classes = [name.replace("_", " ").replace("__", " ").replace("___", " ").title() for name in class_names]
 
             # Create a clean table for the class names
             classes_df = pd.DataFrame(
