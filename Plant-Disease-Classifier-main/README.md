@@ -20,14 +20,7 @@
 ## 🚀 Live Demo
 
 The application is currently deployed and available at:
-[https://plant-disease-classifier-cnn.streamlit.app/](https://plant-disease-classifier-cnn.streamlit.app/)
 
-
-## Video Demonstration
-
-<div align="center">
-  <video width="700" src="https://github.com/user-attachments/assets/205a963b-3a80-473e-8337-0dccaa977388"/>
-</div>
 
 
 ## ✨ Features
