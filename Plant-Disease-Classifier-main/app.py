@@ -11,6 +11,28 @@ from plant_disease_classifier import PlantDiseaseModel, predict_image
 import warnings
 
 warnings.filterwarnings("ignore")
+
+# Visitor counter function
+def update_visitor_count():
+    # File to store the count
+    count_file = "visitor_count.txt"
+    
+    try:
+        # Try to read the current count
+        with open(count_file, "r") as f:
+            count = int(f.read())
+    except (FileNotFoundError, ValueError):
+        # If file doesn't exist or is corrupted, start at 0
+        count = 0
+    
+    # Increment the count
+    count += 1
+    
+    # Save the new count
+    with open(count_file, "w") as f:
+        f.write(str(count))
+    
+    return count
 # Set page configuration
 st.set_page_config(
     page_title="Plant Disease Classifier",
@@ -486,6 +508,19 @@ def main():
 
     # Show model information in sidebar
     with st.sidebar:
+         # Visitor counter
+        try:
+            visitor_count = update_visitor_count()
+            st.markdown(f"""
+            <div style="background-color: #E8F5E9; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <p style="margin: 0; font-size: 14px; color: #2E7D32; text-align: center;">
+                    🌿 <strong>Total Visitors:</strong> {visitor_count:,}
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"Could not update visitor count: {e}")
+
         st.markdown("<h2 style='color: #2E7D32;'>About the Model</h2>",
                     unsafe_allow_html=True)
         st.write(

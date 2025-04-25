@@ -31,3 +31,6 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
+__pycache__/
+visitor_count.txt
+venv/
