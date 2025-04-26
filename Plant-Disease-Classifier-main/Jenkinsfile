@@ -1,12 +1,12 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/devanshsengar04/plant-disease.git'
-            }
-        }
+   stage('Clone Repo') {
+    steps {
+        git url: 'https://github.com/devanshsengar04/plant-disease.git', branch: 'main'
+    }
+}
+
 
         stage('Navigate to Project') {
             steps {
