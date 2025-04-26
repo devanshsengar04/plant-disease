@@ -71,6 +71,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Update Visitor Count') {
+            steps {
+                script {
+                    def isWindows = isUnix() ? false : true
+                    if (isWindows) {
+                        // Assuming you have a script or API to update the visitor count
+                        // Replace this with your logic to update the count
+                        bat '''
+                            echo "Updating visitor count..."
+                            curl -X POST http://localhost:8501/api/update_visitor_count
+                        '''
+                    } else {
+                        echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                    }
+                }
+            }
+        }
     }
     
     post {
