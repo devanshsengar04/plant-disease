@@ -1,33 +1,81 @@
 pipeline {
-    agent any
-
+    agent any  // Uses any available agent
+    
+    environment {
+        PROJECT_DIR = 'Plant-Disease-Classifier-main'
+    }
+    
     stages {
-        stage('Clone Repo') {
+        stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/devanshsengar04/plant-disease.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/devanshsengar04/plant-disease.git'
             }
         }
-
-        stage('Navigate to Project') {
+        
+        stage('Setup Python Environment') {
             steps {
-                dir('Plant-Disease-Classifier-main') {
-                    echo 'Navigated into project directory.'
+                script {
+                    def isWindows = isUnix() ? false : true
+                    if (isWindows) {
+                        // Check if Python exists, if not install it
+                        def pythonExists = bat(script: 'where python', returnStatus: true) == 0
+                        if (!pythonExists) {
+                            bat '''
+                                echo "Python not found. Installing..."
+                                choco install python
+                            '''
+                        }
+                        bat 'python --version'
+                    } else {
+                        // On Unix-like systems (Linux/Mac)
+                        echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                    }
                 }
             }
         }
-
-        stage('Build Docker Image') {
+        
+        stage('Install Dependencies') {
             steps {
-                dir('Plant-Disease-Classifier-main') {
-                    sh 'docker build -t ml-app .'
+                dir(PROJECT_DIR) {
+                    script {
+                        def isWindows = isUnix() ? false : true
+                        if (isWindows) {
+                            bat '''
+                                python -m venv venv
+                                .\\venv\\Scripts\\activate
+                                pip install --upgrade pip
+                                pip install -r requirements.txt
+                            '''
+                        } else {
+                            echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                        }
+                    }
                 }
             }
         }
-
-        stage('Run Docker Container') {
+        
+        stage('Run Tests') {
             steps {
-                sh 'docker run -d -p 8501:8501 --name ml-container ml-app || echo "Container already running"'
+                dir(PROJECT_DIR) {
+                    script {
+                        def isWindows = isUnix() ? false : true
+                        if (isWindows) {
+                            bat '''
+                                .\\venv\\Scripts\\activate
+                                python -m pytest tests/
+                            '''
+                        } else {
+                            echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                        }
+                    }
+                }
             }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed'
         }
     }
 }
