@@ -1,0 +1,99 @@
+pipeline {
+    agent any  // Uses any available agent
+    
+    environment {
+        PROJECT_DIR = 'Plant-Disease-Classifier-main'
+    }
+    
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/devanshsengar04/plant-disease.git'
+            }
+        }
+        
+        stage('Setup Python Environment') {
+            steps {
+                script {
+                    def isWindows = isUnix() ? false : true
+                    if (isWindows) {
+                        // Check if Python exists, if not install it
+                        def pythonExists = bat(script: 'where python', returnStatus: true) == 0
+                        if (!pythonExists) {
+                            bat '''
+                                echo "Python not found. Installing..."
+                                choco install python
+                            '''
+                        }
+                        bat 'python --version'
+                    } else {
+                        // On Unix-like systems (Linux/Mac)
+                        echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                    }
+                }
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                dir(PROJECT_DIR) {
+                    script {
+                        def isWindows = isUnix() ? false : true
+                        if (isWindows) {
+                            bat '''
+                                python -m venv venv
+                                .\\venv\\Scripts\\activate
+                                pip install --upgrade pip
+                                pip install -r requirements.txt
+                            '''
+                        } else {
+                            echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                dir(PROJECT_DIR) {
+                    script {
+                        def isWindows = isUnix() ? false : true
+                        if (isWindows) {
+                            bat '''
+                                .\\venv\\Scripts\\activate
+                                python -m pytest tests/
+                            '''
+                        } else {
+                            echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Update Visitor Count') {
+            steps {
+                script {
+                    def isWindows = isUnix() ? false : true
+                    if (isWindows) {
+                        // Assuming you have a script or API to update the visitor count
+                        // Replace this with your logic to update the count
+                        bat '''
+                            echo "Updating visitor count..."
+                            curl -X POST http://localhost:8501/api/update_visitor_count
+                        '''
+                    } else {
+                        echo "This script is for Windows only. Please ensure it's running on a Windows agent."
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed'
+        }
+    }
+}
