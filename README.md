@@ -4,24 +4,6 @@
   <img src="images/logo.png" alt="Project Logo" width="600"/>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/>
-  <img src="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python"/>
-  <img src="https://img.shields.io/badge/PyTorch-2.0%2B-orange" alt="PyTorch"/>
-  <img src="https://img.shields.io/badge/Streamlit-1.20%2B-red" alt="Streamlit"/>
-</p>
-
-<p align="center">
-  A deep learning-based web application that diagnoses diseases in plant leaves using convolutional neural networks (CNNs).
-</p>
-
-![Plant Disease Classifier Demo](https://your-repo-url/images/demo.gif)
-
-## 🚀 Live Demo
-
-The application is currently deployed and available at:
-
-
 
 ## ✨ Features
 
